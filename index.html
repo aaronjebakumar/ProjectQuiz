@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<title>Quiz App</title>
+</head>
+<body>
+  
+    <center><h1>JavaScript Quiz</h1></center>
+<div class="quiz-container">
+  <div class="question"></div>
+  <div class="options"></div>
+  <div class="buttons">
+    <button id="prevBtn" disabled>Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
+  <div class="rest">Question: <span id="answeredCount">0</span></div>
+  <div>Score: <span id="score">0</span></div>
+</div>
+<script>
+  const questions = [
+    {
+      question: "What is the correct way to declare a variable in JavaScript?",
+      options: ["a) variableName = value;", "b) var variableName = value;", "c) let variableName = value;", "d) const variableName = value; "],
+      correctAnswer: "b"
+    },
+    {
+      question: "What does the `===` operator do in JavaScript?",
+      options: ["a) It assigns a value to a variable", "b) It compares two values for equality without type conversion.", "c) It checks if a variable is declared.", "d) It performs a mathematical calculation."],
+      correctAnswer: "b"
+    },
+    {
+      question: "How do you write a single-line comment in JavaScript?",
+      options: ["a) <!-- This is a comment -->", "b) // This is a comment", "c) /* This is a comment */", "d) ** This is a comment **"],
+      correctAnswer: "b"
+    },
+    {
+      question: "Which built-in function is used to print something to the browser console?",
+      options: ["a) console.log()", "b) print()", "c) log()", "d) display()"],
+      correctAnswer: "a"
+    },
+    {
+      question: "What is the purpose of the `if` statement in JavaScript?",
+      options: ["a) To create a loop.", "b) To define a function", "c) To execute code conditionally, based on a true/false expression.", "d) To declare a variable."],
+      correctAnswer: "c"
+    },
+    {
+      question: "How can you convert a string to a number in JavaScript?",
+      options: ["a) parseNumber()", "b) convertToNumber()", "c) Number()", "d) toNumber()"],
+      correctAnswer: "c"
+    },
+    {
+      question: "Which function is used to add an element to the end of an array in JavaScript?",
+      options: ["a) push()", "b) addToEnd()", "c) append()", "d) insert()"],
+      correctAnswer: "a"
+    },
+    {
+      question: "What does the `return` statement do in a function?",
+      options: ["a) It terminates the function's execution.", "b) It defines a new variable.", "c) It returns a value from the function.", "d) It starts a loop."],
+      correctAnswer: "c"
+    },
+    {
+      question: "How do you access the length of a string variable called `myString`?",
+      options: ["a) myString.length()", "b) length.myString()", "c) myString.length", "d) lengthOf(myString)"],
+      correctAnswer: "c"
+    },
+    {
+      question: "What does the term DOM stand for in web development?",
+      options: ["a) Document Object Model", "b) Display Output Mode", "c) Data Output Mechanism", "d) Document Order Model"],
+      correctAnswer: "a"
+    }
+
+    // Add more questions here
+  ];
+
+  const quizContainer = document.querySelector(".quiz-container");
+  const questionElement = quizContainer.querySelector(".question");
+  const optionsElement = quizContainer.querySelector(".options");
+  const prevButton = quizContainer.querySelector("#prevBtn");
+  const nextButton = quizContainer.querySelector("#nextBtn");
+  const answeredCountElement = quizContainer.querySelector("#answeredCount");
+  const scoreElement = quizContainer.querySelector("#score");
+
+  let currentQuestionIndex = 0;
+  let userScore = 0;
+
+  function updateQuestion() {
+    const currentQuestion = questions[currentQuestionIndex];
+    questionElement.textContent = `Question ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+    optionsElement.innerHTML = "";
+    currentQuestion.options.forEach((option, index) => {
+      const optionDiv = document.createElement("div");
+      optionDiv.className = "option";
+      optionDiv.innerHTML = `<input type="radio" name="q${currentQuestionIndex}" value="${index}"> ${option}`;
+      optionsElement.appendChild(optionDiv);
+    });
+  }
+
+  function updateButtons() {
+    prevButton.disabled = currentQuestionIndex === 0;
+    nextButton.disabled = currentQuestionIndex === questions.length - 1;
+  }
+
+  function updateScore() {
+    scoreElement.textContent = userScore;
+  }
+
+  function updateAnsweredCount() {
+    const answeredCount = document.querySelectorAll('input[name^="q"]:checked').length;
+    answeredCountElement.textContent = answeredCount;
+  }
+
+  function checkAnswer() {
+    const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+    if (selectedOption) {
+      const selectedAnswerIndex = parseInt(selectedOption.value);
+      const correctAnswerIndex = questions[currentQuestionIndex].options.findIndex(option => option.startsWith("b)"));
+      if (selectedAnswerIndex === correctAnswerIndex) {
+        userScore++;
+      }
+    }
+  }
+
+  prevButton.addEventListener("click", () => {
+    checkAnswer();
+    currentQuestionIndex--;
+    updateQuestion();
+    updateButtons();
+    updateAnsweredCount();
+    updateScore();
+  });
+
+  nextButton.addEventListener("click", () => {
+    checkAnswer();
+    currentQuestionIndex++;
+    updateQuestion();
+    updateButtons();
+    updateAnsweredCount();
+    updateScore();
+  });
+
+  updateQuestion();
+  updateButtons();
+  updateScore();
+</script>
+</body>
+</html>
